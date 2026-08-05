@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>User</title>
+
+     
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+     
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+         
+         
+         
+        :root {
+             
+            --primary: #66FCF1;
+            --primary-light: rgba(102, 252, 241, 0.12);
+            --primary-hover: #45A29E;
+            --primary-glow: rgba(102, 252, 241, 0.25);
+
+             
+            --navy-dark: #050608;
+             
+            --navy-main: #1F2833;
+             
+            --navy-light: #2A3644;
+             
+            --navy-border: rgba(102, 252, 241, 0.15);
+
+             
+            --bg-color: #07090F;
+             
+            --card-bg: #0B0C10;
+             
+            --border-color: rgba(255, 255, 255, 0.1);
+
+             
+            --text-dark: #FFFFFF;
+             
+            --text-muted: #94A3B8;
+            --text-white: #F8FAFC;
+
+             
+            --success: #10B981;
+            --success-light: rgba(16, 185, 129, 0.15);
+            --danger: #EF4444;
+            --danger-light: rgba(239, 68, 68, 0.15);
+            --warning: #F59E0B;
+            --warning-light: rgba(245, 158, 11, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace !important;
+            letter-spacing: -0.5px;
+        }
+
+         
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+         
+        .sidebar {
+            width: 280px;
+            background-color: var(--navy-main);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 1000;
+            position: fixed;
+            height: 100vh;
+            border-right: 1px solid var(--navy-border);
+            box-shadow: 4px 0 25px rgba(0, 0, 0, 0.6);
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(3, 7, 18, 0.85);
+            z-index: 999;
+            backdrop-filter: blur(6px);
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        .sidebar-header {
+            padding: 28px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--navy-border);
+            background: var(--navy-dark);
+        }
+
+        .logo-da {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-white);
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .logo-da i {
+            color: var(--primary);
+            font-size: 24px;
+            filter: drop-shadow(0 0 8px var(--primary-glow));
+        }
+
+        .close-btn {
+            display: none;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--navy-border);
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            font-size: 18px;
+            color: var(--text-white);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .menu-link {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 28px;
+            color: #94A3B8;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .menu-link i {
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .menu-link:hover {
+            background-color: var(--navy-light);
+            color: var(--text-white);
+        }
+
+        .menu-link:hover i {
+            transform: translateX(3px);
+        }
+
+        .menu-link.active {
+            background: linear-gradient(90deg, var(--primary-light) 0%, transparent 100%);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+            font-weight: 700;
+        }
+
+        .sidebar-bottom {
+            padding: 20px 24px 28px 24px;
+            border-top: 1px solid var(--navy-border);
+        }
+
+        .logout-btn {
+            color: #F87171;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(239, 68, 68, 0.15);
+            background: rgba(239, 68, 68, 0.05);
+            justify-content: center;
+        }
+
+        .logout-btn:hover {
+            background-color: rgba(239, 68, 68, 0.15);
+            color: #EF4444;
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+         
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            margin-left: 280px;
+            min-height: 100vh;
+            width: calc(100% - 280px);
+        }
+
+        .top-header {
+            background-color: var(--card-bg);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 998;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: var(--primary-light);
+            color: var(--primary);
+            border: 1px solid rgba(102, 252, 241, 0.3);
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .menu-toggle:hover {
+            background: var(--primary);
+            color: #000;
+        }
+
+        .greeting h1 {
+            font-size: 1.45rem;
+            color: var(--text-dark);
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .welcome-name {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            text-align: right;
+        }
+
+        .user-role {
+            font-size: 0.72rem;
+            color: var(--primary);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .user-email {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            font-weight: 700;
+            display: block;
+        }
+
+        .user-avatar i {
+            font-size: 44px;
+            color: var(--navy-main);
+            background: var(--primary);
+            border-radius: 50%;
+            padding: 2px;
+        }
+
+         
+        .view-section {
+            display: none;
+            padding: 40px;
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .view-section.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            margin-bottom: 24px;
+            color: var(--text-dark);
+            border-left: 4px solid var(--primary);
+            padding-left: 14px;
+            font-weight: 800;
+        }
+
+        .scroll-anim {
+            opacity: 0;
+            transform: translateY(25px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+
+        .scroll-anim.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+         
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 28px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 25px var(--primary-glow);
+        }
+
+        .stat-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 26px;
+            flex-shrink: 0;
+        }
+
+        .stat-details h3 {
+            font-size: 1.85rem;
+            margin-bottom: 4px;
+            color: var(--text-dark);
+            font-weight: 800;
+        }
+
+        .stat-details p {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .content-box {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 36px;
+            border: 1px solid var(--border-color);
+            width: 100%;
+        }
+
+        .two-col-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 30px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 360px;
+            width: 100%;
+        }
+
+         
+        .input-group {
+            margin-bottom: 22px;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            outline: none;
+            font-size: 0.95rem;
+            background: var(--navy-dark);
+            color: var(--text-dark);
+            transition: all 0.25s ease;
+            font-family: inherit;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            border-color: var(--primary);
+            background: #000;
+            box-shadow: 0 0 0 4px var(--primary-light);
+        }
+
+        .error-msg {
+            color: var(--danger);
+            font-size: 0.75rem;
+            margin-top: 6px;
+            display: none;
+            font-weight: 700;
+        }
+
+        .input-error {
+            border-color: var(--danger) !important;
+            background: var(--danger-light) !important;
+        }
+
+        .success-msg {
+            color: var(--success);
+            background: var(--success-light);
+            padding: 16px 20px;
+            border-radius: 14px;
+            margin-bottom: 26px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+         
+        .main-btn,
+        .action-btn {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .main-btn {
+            background: var(--primary);
+            color: #000;
+            padding: 16px 28px;
+            width: 100%;
+            font-size: 0.95rem;
+            border: none;
+            border-radius: 14px;
+            margin-top: 10px;
+        }
+
+        .main-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px var(--primary-glow);
+        }
+
+        .main-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .action-btn {
+            background: var(--primary-light);
+            color: var(--primary);
+            border: 1px solid rgba(102, 252, 241, 0.3);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+        }
+
+        .action-btn:hover {
+            background: var(--primary);
+            color: #000;
+            transform: translateY(-1px);
+        }
+
+         
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            min-width: 750px;
+        }
+
+        th,
+        td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.88rem;
+        }
+
+        th {
+            background-color: var(--navy-dark);
+            color: var(--text-muted);
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .status {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+        }
+
+        .status.delivered {
+            background: var(--success-light);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status.transit {
+            background: var(--warning-light);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+         
+        .media-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .media-item {
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            overflow: hidden;
+            background: var(--card-bg);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .media-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 25px var(--primary-glow);
+        }
+
+        .media-header-banner {
+            padding: 24px;
+            background: var(--navy-main);
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .asset-code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--primary);
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .asset-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            margin-top: 4px;
+            color: var(--text-dark);
+        }
+
+        .media-info {
+            padding: 22px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .media-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .media-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .media-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .btn-approve {
+            background: var(--primary-light);
+            color: var(--primary);
+            border: 1px solid rgba(102, 252, 241, 0.3);
+        }
+
+        .btn-approve:hover {
+            background: var(--primary);
+            color: #000;
+        }
+
+         
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .menu-toggle,
+            .close-btn {
+                display: block;
+            }
+
+            .two-col-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .top-header {
+                padding: 16px 20px;
+            }
+
+            .view-section {
+                padding: 24px 20px;
+            }
+
+            .user-info {
+                display: none;
+            }
+
+            .greeting h1 {
+                font-size: 1.25rem;
+            }
+
+            .content-box {
+                padding: 24px 20px;
+            }
+
+            .media-gallery {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .logo-img {
+            width: 150px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .logo-da {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary-color);
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .logo-da i {
+            font-size: 28px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+         
+        <aside class="sidebar" id="sidebar">
+            <div>
+                <div class="sidebar-header">
+                    <div class="logo-da">
+                        <img src="./asset/aqua_logo.webp" alt="Company Logo" class="logo-img">
+                    </div>
+                    <button class="close-btn" id="closeSidebar" aria-label="Close Sidebar">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <ul class="sidebar-menu">
+                    <li>
+                        <a class="menu-link active" data-target="dashboard-view">
+                            <i class="fa-solid fa-chart-pie"></i> Overview
+                        </a>
+                    </li>
+                    <li>
+                        <a class="menu-link" data-target="dispatch-view">
+                            <i class="fa-solid fa-rocket"></i> Book Expedition
+                        </a>
+                    </li>
+                    <li>
+                        <a class="menu-link" data-target="fleet-view">
+                            <i class="fa-solid fa-clock-rotate-left"></i> My Expeditions
+                        </a>
+                    </li>
+                    <li>
+                        <a class="menu-link" data-target="warehouse-view">
+                            <i class="fa-solid fa-star"></i> Saved Coordinates
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="sidebar-bottom">
+                <a href="login.html" class="menu-link logout-btn">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+                </a>
+            </div>
+        </aside>
+
+         
+        <main class="main-content">
+
+             
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="openSidebar" aria-label="Open Sidebar">
+                        <i class="fa-solid fa-bars-staggered"></i>
+                    </button>
+                    <div class="greeting">
+                        <h1 id="page-title">Overview <span class="welcome-name" id="welcomeText">| Welcome, Explorer
+                                👋</span></h1>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="user-profile">
+                        <div class="user-info">
+                            <span class="user-role">Explorer Account</span>
+                             
+                            <span class="user-email font-mono" id="displayEmail">user@atkacapital.com</span>
+                        </div>
+                        <div class="user-avatar">
+                            <i class="fa-solid fa-circle-user"></i>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+             
+            <div id="dashboard-view" class="view-section active">
+                <section class="stats-grid scroll-anim">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: var(--primary-light); color: var(--primary);">
+                            <i class="fa-solid fa-satellite"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3 class="font-mono">24.5 Hrs</h3>
+                            <p>Observation Time</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(16, 185, 129, 0.15); color: var(--success);">
+                            <i class="fa-solid fa-map-location-dot"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3 class="font-mono">04</h3>
+                            <p>Completed Expeditions</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(245, 158, 11, 0.15); color: var(--warning);">
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3 class="font-mono">12</h3>
+                            <p>Saved Targets</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="content-box scroll-anim">
+                    <h2 class="section-title">Stargazing Activity (Monthly Log)</h2>
+                    <div class="chart-container">
+                        <canvas id="volumeChart"></canvas>
+                    </div>
+                </section>
+            </div>
+
+             
+            <div id="dispatch-view" class="view-section">
+                <div class="two-col-grid">
+                    <section class="content-box scroll-anim">
+                        <h2 class="section-title">Schedule New Expedition</h2>
+
+                         
+                        <form id="dispatchForm" novalidate>
+                            <div id="formSuccess" class="success-msg">
+                                <i class="fa-solid fa-circle-check"></i>
+                                <span>Expedition confirmed! Coordinates sent to your Comm-link.</span>
+                            </div>
+
+                            <div class="input-group">
+                                <label>Expedition Title (Optional)</label>
+                                <input type="text" class="font-mono" placeholder="e.g. Orion Nebula Hunt">
+                            </div>
+
+                            <div class="input-group">
+                                <label>Observatory Node *</label>
+                                <select id="serviceSelect" required>
+                                    <option value="" selected disabled>Select Array Location...</option>
+                                    <option value="atacama">Atacama Desert Base (Chile)</option>
+                                    <option value="mauna">Mauna Kea Array (Hawaii)</option>
+                                    <option value="canary">Canary Islands Hub (Spain)</option>
+                                </select>
+                                <div class="error-msg" id="serviceError">Please select an observatory location.</div>
+                            </div>
+
+                            <div class="input-group">
+                                <label>Launch Date *</label>
+                                <input type="date" id="dateSelect" required>
+                                <div class="error-msg" id="dateError">Please select a valid future date.</div>
+                            </div>
+
+                            <div class="input-group">
+                                <label>Crew Size (Guests) *</label>
+                                <input type="number" id="guestCount" placeholder="1 to 10" min="1" max="10" required>
+                                <div class="error-msg" id="guestError">Crew size must be between 1 and 10.</div>
+                            </div>
+
+                            <button type="submit" class="main-btn">
+                                <span>Confirm Booking</span>
+                                <i class="fa-solid fa-rocket"></i>
+                            </button>
+                        </form>
+                    </section>
+                </div>
+            </div>
+
+             
+            <div id="fleet-view" class="view-section">
+                <section class="content-box scroll-anim">
+                    <h2 class="section-title">Expedition History & Logs</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Mission ID</th>
+                                    <th>Target Location</th>
+                                    <th>Launch Date</th>
+                                    <th>Crew Size</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong class="font-mono">EXP-4092</strong></td>
+                                    <td><i class="fa-solid fa-mountain text-muted"></i> Atacama Base</td>
+                                    <td>Aug 12, 2026</td>
+                                    <td><strong class="font-mono">02</strong></td>
+                                    <td><span class="status transit">Upcoming</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong class="font-mono">EXP-3310</strong></td>
+                                    <td><i class="fa-solid fa-volcano text-muted"></i> Mauna Kea Array</td>
+                                    <td>Jul 04, 2026</td>
+                                    <td><strong class="font-mono">04</strong></td>
+                                    <td><span class="status delivered">Completed</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong class="font-mono">EXP-3188</strong></td>
+                                    <td><i class="fa-solid fa-satellite text-muted"></i> Canary Hub</td>
+                                    <td>Jun 15, 2026</td>
+                                    <td><strong class="font-mono">01</strong></td>
+                                    <td><span class="status delivered">Completed</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+             
+            <div id="warehouse-view" class="view-section">
+                <section class="content-box scroll-anim" style="background: transparent; border: none; padding: 0;">
+                    <h2 class="section-title">Saved Constellations & Nebulas</h2>
+
+                    <div class="media-gallery">
+                         
+                        <div class="media-item">
+                            <div class="media-header-banner">
+                                <span class="asset-code">CRB-M1</span>
+                                <h4 class="asset-title">Crab Nebula</h4>
+                            </div>
+                            <div class="media-info">
+                                <div class="media-meta">
+                                    <span><i class="fa-solid fa-crosshairs"></i> Taurus Constellation</span>
+                                    <span>Deep Space</span>
+                                </div>
+                                <div class="media-actions">
+                                    <a href="404.html" class="media-btn btn-approve">
+                                        <i class="fa-solid fa-map-location-dot"></i> Load Coordinates
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                         
+                        <div class="media-item">
+                            <div class="media-header-banner">
+                                <span class="asset-code">EGL-M16</span>
+                                <h4 class="asset-title">Eagle Nebula</h4>
+                            </div>
+                            <div class="media-info">
+                                <div class="media-meta">
+                                    <span><i class="fa-solid fa-crosshairs"></i> Serpens Constellation</span>
+                                    <span>Star Formation</span>
+                                </div>
+                                <div class="media-actions">
+                                    <a href="404.html" class="media-btn btn-approve">
+                                        <i class="fa-solid fa-map-location-dot"></i> Load Coordinates
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                         
+                        <div class="media-item">
+                            <div class="media-header-banner">
+                                <span class="asset-code">MILKY-00</span>
+                                <h4 class="asset-title">Galactic Core</h4>
+                            </div>
+                            <div class="media-info">
+                                <div class="media-meta">
+                                    <span style="color:var(--primary);"><i class="fa-solid fa-star"></i> High
+                                        Visibility</span>
+                                    <span>Sagittarius</span>
+                                </div>
+                                <div class="media-actions">
+                                    <a href="404.html" class="media-btn btn-approve">
+                                        <i class="fa-solid fa-map-location-dot"></i> Load Coordinates
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+ 
+ 
+ 
+            const emailValue = localStorage.getItem("UserMail") || "explorer@cosmic.com";
+            const extractedName = emailValue.split("@")[0];
+            const formattedName = extractedName.charAt(0).toUpperCase() + extractedName.slice(1);
+
+ 
+            document.getElementById("displayEmail").textContent = emailValue;
+            const welcomeEl = document.getElementById("welcomeText");
+            if (welcomeEl) {
+                welcomeEl.textContent = `| Welcome, ${formattedName} 👋`;
+            }
+
+ 
+ 
+ 
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const openSidebarBtn = document.getElementById('openSidebar');
+            const closeSidebarBtn = document.getElementById('closeSidebar');
+
+            function openSidebar() {
+                sidebar.classList.add('active');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+            function closeSidebar() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+
+            openSidebarBtn.addEventListener('click', openSidebar);
+            closeSidebarBtn.addEventListener('click', closeSidebar);
+            overlay.addEventListener('click', closeSidebar);
+
+ 
+            const menuLinks = document.querySelectorAll('.sidebar-menu .menu-link');
+            const views = document.querySelectorAll('.view-section');
+            const pageTitle = document.getElementById('page-title');
+
+            menuLinks.forEach(link => {
+                link.addEventListener('click', function () {
+                    if (this.classList.contains('active')) return;
+
+                    menuLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    views.forEach(v => v.classList.remove('active'));
+
+                    const targetId = this.getAttribute('data-target');
+                    const activeView = document.getElementById(targetId);
+                    if (activeView) activeView.classList.add('active');
+
+                    let titleText = this.innerText.trim();
+                    pageTitle.innerHTML = `${titleText} <span class="welcome-name" id="welcomeText">| Welcome, ${formattedName} 👋</span>`;
+
+                    if (window.innerWidth <= 1024) closeSidebar();
+                    triggerAnimations();
+                });
+            });
+
+ 
+ 
+ 
+            const ctx = document.getElementById('volumeChart');
+            if (ctx) {
+                new Chart(ctx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+                        datasets: [{
+                            label: 'Observation Hours',
+                            data: [4, 8, 3, 12, 18, 24.5],
+                            backgroundColor: '#66FCF1',
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                                ticks: { color: '#94A3B8' }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: { color: '#94A3B8' }
+                            }
+                        }
+                    }
+                });
+            }
+
+ 
+ 
+ 
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('show');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            function triggerAnimations() {
+                const animElements = document.querySelectorAll('.scroll-anim');
+                animElements.forEach(el => {
+                    el.classList.remove('show');
+                    observer.observe(el);
+                });
+            }
+            triggerAnimations();
+
+ 
+ 
+ 
+            const dispatchForm = document.getElementById('dispatchForm');
+            if (dispatchForm) {
+                dispatchForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    const serviceSelect = document.getElementById('serviceSelect');
+                    const dateSelect = document.getElementById('dateSelect');
+                    const guestCount = document.getElementById('guestCount');
+
+                    const serviceError = document.getElementById('serviceError');
+                    const dateError = document.getElementById('dateError');
+                    const guestError = document.getElementById('guestError');
+                    const formSuccess = document.getElementById('formSuccess');
+
+                    let isValid = true;
+
+ 
+                    [serviceSelect, dateSelect, guestCount].forEach(el => el.classList.remove('input-error'));
+                    [serviceError, dateError, guestError, formSuccess].forEach(el => el.style.display = 'none');
+
+ 
+                    if (serviceSelect.value === '') {
+                        serviceSelect.classList.add('input-error');
+                        serviceError.style.display = 'block';
+                        serviceSelect.focus();
+                        isValid = false;
+                    }
+
+ 
+                    if (dateSelect.value === '') {
+                        dateSelect.classList.add('input-error');
+                        dateError.style.display = 'block';
+                        if (isValid) dateSelect.focus();
+                        isValid = false;
+                    }
+
+ 
+                    const guests = parseInt(guestCount.value);
+                    if (isNaN(guests) || guests < 1 || guests > 10) {
+                        guestCount.classList.add('input-error');
+                        guestError.style.display = 'block';
+                        if (isValid) guestCount.focus();
+                        isValid = false;
+                    }
+
+ 
+                    if (isValid) {
+                        const btn = this.querySelector('button');
+                        const originalHTML = btn.innerHTML;
+                        btn.disabled = true;
+                        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Processing...</span>';
+
+                        setTimeout(() => {
+                            formSuccess.style.display = 'flex';
+                            btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Confirmed</span>';
+                            window.location.href = '404.html'
+                            this.reset();
+
+                            setTimeout(() => {
+                                formSuccess.style.display = 'none';
+                                btn.disabled = false;
+                                btn.innerHTML = originalHTML;
+                            }, 3500);
+                        }, 1200);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
