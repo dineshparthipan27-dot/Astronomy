@@ -434,9 +434,13 @@
                 <div class="footer-social-col" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="300">
                     <h4 class="footer-title">Newsletter</h4>
                      
-                    <form class="footer-newsletter-form" id="newsletterForm">
-                        <input type="email" id="emailInput" placeholder="Your Email Address" required>
-                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                     <form class="footer-newsletter-form" id="newsletterForm" novalidate>
+                        <div class="newsletter-input-wrapper">
+                            <input type="email" id="emailInput" placeholder="Your Comm-Link (Email)" required>
+                            <button type="submit" id="newsletterBtn"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                        <!-- Validation Status Message -->
+                        <div id="newsletterStatus" class="newsletter-status"></div>
                     </form>
                      
                     <div id="formMessage" class="form-message"></div>

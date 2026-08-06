@@ -585,3 +585,20 @@ body {
 .ai-logo-text span {
     color: var(--primary-color);
 }
+
+/* --- REMOVE BROWSER'S DEFAULT PASSWORD REVEAL ICON --- */
+
+/* For Edge and IE */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
+
+/* For Chrome / Safari / Edge (Modern) */
+input[type="password"]::-webkit-contacts-auto-fill-button,
+input[type="password"]::-webkit-credentials-auto-fill-button {
+    visibility: hidden;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+}
