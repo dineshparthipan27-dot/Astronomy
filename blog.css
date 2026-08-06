@@ -1704,3 +1704,7 @@ body {
     border-color: #FF4C4C !important;
     box-shadow: 0 0 15px rgba(255, 76, 76, 0.3) !important;
 }
+
+a{
+    text-decoration: none;
+}
