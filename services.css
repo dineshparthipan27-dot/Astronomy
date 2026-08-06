@@ -581,6 +581,10 @@
     .split-image-container:hover .glass-stats-badge {
         transform: translate(50%, -10px);
     }
+    
+    .tours-section{
+        padding: 10px;
+    }
 }
 
  
@@ -995,6 +999,7 @@
      
     position: relative;
     font-family: 'Poppins', sans-serif;
+    overflow: hidden;
 }
 
 .planetarium-section .split-layout {
@@ -1656,4 +1661,8 @@
         max-width: 300px;
         text-align: center;
     }
+    
+.rental-grid {
+    grid-template-columns: 1fr;
+}
 }

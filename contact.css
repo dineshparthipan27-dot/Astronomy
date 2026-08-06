@@ -74,7 +74,7 @@
 
  
 .hero-title-large {
-    font-size: 4.5rem;
+    font-size: 4.5rem; 
     color: #FFFFFF;
     font-weight: 700;
     margin-bottom: 20px;
@@ -233,7 +233,7 @@
     }
 
     .hero-title-large {
-        font-size: 3.2rem;
+        font-size: 2.2rem;
     }
 
     .hero-visual-content {
@@ -436,7 +436,7 @@
     }
 
     .datapad-card {
-        padding: 35px 20px;
+        padding: 35px 10px;
     }
 }
 
