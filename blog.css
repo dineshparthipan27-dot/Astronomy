@@ -1663,7 +1663,17 @@ body {
 }
 
  
- 
+ /* --- FIX BROWSER AUTOFILL BACKGROUND --- */
+.newsletter-input:-webkit-autofill,
+.newsletter-input:-webkit-autofill:hover, 
+.newsletter-input:-webkit-autofill:focus, 
+.newsletter-input:-webkit-autofill:active {
+    /* To keep the background transparent/dark */
+    transition: background-color 5000s ease-in-out 0s;
+    /* To keep the text color white */
+    -webkit-text-fill-color: #FFFFFF !important;
+    caret-color: #FFFFFF;
+}
  
 
 .form-message {
